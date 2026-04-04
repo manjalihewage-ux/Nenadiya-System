@@ -3,179 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>නැණදිය | Nenadiya Higher Educational Institute</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🎓</text></svg>">
+    <title>නැණදිය | Nenadiya Management</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="https://unpkg.com/html5-qrcode"></script>
 
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
     <style>
-        :root { --blue: #2563eb; --navy: #1e3a8a; --red: #ef4444; --green: #10b981; }
+        :root { --blue: #2563eb; --navy: #1e3a8a; --red: #ef4444; }
         body { background: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
-        .header-section { background: linear-gradient(135deg, var(--navy), var(--blue)); color: white; padding: 20px; text-align: center; border-bottom: 6px solid var(--red); border-radius: 0 0 30px 30px; position: relative; }
-        .save-indicator { position: absolute; top: 10px; right: 20px; font-size: 10px; background: rgba(0,0,0,0.3); padding: 2px 10px; border-radius: 10px; }
-        .nav-pills .nav-link { cursor: pointer; font-weight: 500; color: var(--navy); border-radius: 50px; transition: 0.3s; margin: 2px; }
-        .nav-pills .nav-link.active { background: var(--blue) !important; color: white !important; }
-        .card-custom { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: none; }
-        .stu-photo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; }
-        .badge-att { font-size: 11px; padding: 4px 8px; border-radius: 6px; margin: 2px; display: inline-flex; align-items: center; font-weight: bold; color: white; }
-        .bg-present { background-color: var(--green); }
-        .bg-absent { background-color: var(--red); }
-        .id-card-wrap { width: 350px; height: 215px; background: white; border: 2px solid #000; overflow: hidden; position: relative; display: inline-block; }
-        .id-card-header { background: var(--navy); color: white; padding: 8px; text-align: center; border-bottom: 3px solid var(--red); font-weight: 900; }
-        .id-content { display: flex; padding: 12px; text-align: left; }
-        .id-photo-frame { width: 85px; height: 105px; border: 2px solid #000; border-radius: 4px; object-fit: cover; }
-        .id-details { flex: 1; padding-left: 15px; }
-        .id-details h5 { font-size: 16px; margin: 0; color: #000; font-weight: 900; text-transform: uppercase; }
-        .id-details p { font-size: 12px; margin: 2px 0; color: #000; font-weight: 700; }
-        .id-footer { position: absolute; bottom: 5px; width: 100%; display: flex; justify-content: center; }
-        #reader { border-radius: 15px; background: #000; }
-        .finance-card { border-radius: 15px; padding: 15px; color: white; margin-bottom: 15px; }
+        .header-section { background: linear-gradient(135deg, var(--navy), var(--blue)); color: white; padding: 20px; text-align: center; border-bottom: 6px solid var(--red); border-radius: 0 0 30px 30px; }
+        .card-custom { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .stu-photo { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        #reader { border-radius: 15px; overflow: hidden; background: #000; }
     </style>
 </head>
 <body>
 
 <div class="header-section mb-4">
-    <div class="save-indicator">Memory Status: <span id="saveStatus">Live</span></div>
+    <div id="saveStatus" class="badge bg-dark mb-2">Cloud Connected</div>
     <h1>නැණදිය උසස් අධ්‍යාපන ආයතනය</h1>
-    <h5 class="opacity-90">Nenadiya Higher Educational Institute - 2026</h5>
+    <p>Management System 2026</p>
 </div>
 
 <div class="container pb-5">
-    <div class="row mb-4 g-3">
-        <div class="col-md-3">
-            <label class="small fw-bold">Active Month</label>
-            <select id="activeMonth" class="form-select bg-primary text-white border-0 shadow-sm" onchange="renderAll()"></select>
-        </div>
-        <div class="col-md-4">
-            <label class="small fw-bold">Class Selection</label>
-            <select id="activeGrade" class="form-select border-0 shadow-sm" onchange="renderAll()"></select>
-        </div>
-        <div class="col-md-5">
-            <label class="small fw-bold">Quick Search</label>
-            <input type="text" id="stuSearch" class="form-control border-0 shadow-sm" placeholder="🔍 Find student..." onkeyup="renderAll()">
-        </div>
+    <div class="row mb-4 g-2">
+        <div class="col-6"><select id="activeMonth" class="form-select shadow-sm" onchange="renderAll()"></select></div>
+        <div class="col-6"><select id="activeGrade" class="form-select shadow-sm" onchange="renderAll()"></select></div>
     </div>
 
-    <ul class="nav nav-pills nav-justified mb-4 bg-white p-2 rounded-pill shadow-sm overflow-auto flex-nowrap">
-        <li class="nav-item"><a class="nav-link active" onclick="showTab('details', this)">Registry</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('attendance', this)">Attendance</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('fees', this)">Fees</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('marks', this)">Marks</a></li>
-        <li class="nav-item"><a class="nav-link text-warning" onclick="showTab('expenses', this)">Finance</a></li>
-    </ul>
-
     <div class="card-custom">
-        <div id="detailsSec" class="tab-content">
-            <div class="row g-2 mb-4 p-3 bg-light rounded shadow-sm">
-                <div class="col-md-3"><input type="text" id="regName" class="form-control" placeholder="Full Name"></div>
-                <div class="col-md-2"><input type="text" id="regWa" class="form-control" placeholder="WhatsApp (94...)"></div>
-                <div class="col-md-3"><input type="file" id="regPhoto" class="form-control" accept="image/*"></div>
-                <div class="col-md-2"><button class="btn btn-primary w-100" onclick="addStudent()">+ Register</button></div>
-                <div class="col-md-2 text-end"><button class="btn btn-sm btn-dark" onclick="exportData()">💾 Backup</button></div>
-            </div>
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead><tr><th>Photo</th><th>Student Info</th><th>WhatsApp</th><th>Actions</th></tr></thead>
-                    <tbody id="detailsBody"></tbody>
-                </table>
+        <div class="row g-2 mb-4 p-3 bg-light rounded">
+            <div class="col-md-4"><input type="text" id="regName" class="form-control" placeholder="Student Name"></div>
+            <div class="col-md-4"><input type="text" id="regWa" class="form-control" placeholder="WhatsApp (94...)"></div>
+            <div class="col-md-4"><button class="btn btn-primary w-100" onclick="addStudent()">Add Student</button></div>
+        </div>
+
+        <div class="row mb-4">
+            <div class="col-md-6 mx-auto">
+                <div id="reader"></div>
+                <button class="btn btn-dark btn-sm w-100 mt-2" onclick="startScanner()">Start Attendance Camera</button>
             </div>
         </div>
 
-        <div id="attendanceSec" class="tab-content d-none">
-            <div class="row mb-4 g-3">
-                <div class="col-lg-5">
-                    <div class="p-3 bg-dark rounded shadow text-white">
-                        <h6 class="mb-3"><i class="bi bi-qr-code-scan"></i> Smart QR Attendance</h6>
-                        <div id="reader"></div>
-                        <div id="scanResult" class="mt-3 p-2 bg-secondary rounded text-center small">Ready...</div>
-                        <button class="btn btn-primary btn-sm w-100 mt-2" onclick="startScanner()">Start Camera</button>
-                    </div>
-                </div>
-                <div class="col-lg-7">
-                    <div class="d-flex justify-content-between mb-3">
-                        <input type="date" id="attDate" class="form-control form-control-sm w-50">
-                        <button class="btn btn-sm btn-success" onclick="bulkAttendance()">Mark All Present</button>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table align-middle small">
-                            <thead><tr><th>Name</th><th>Quick</th><th>Month History</th></tr></thead>
-                            <tbody id="attBody"></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div id="feesSec" class="tab-content d-none">
-            <div class="mb-3"><label class="small fw-bold">Class Fee:</label><input type="number" id="classFee" class="form-control w-25" value="2000" onchange="renderAll()"></div>
-            <table class="table align-middle"><tbody id="feesBody"></tbody></table>
-        </div>
-
-        <div id="marksSec" class="tab-content d-none">
-            <table class="table align-middle"><tbody id="marksBody"></tbody></table>
-        </div>
-
-        <div id="expensesSec" class="tab-content d-none">
-            <div class="row text-center">
-                <div class="col-4"><div class="finance-card bg-primary"><h6 id="revDisplay">0</h6><small>Income</small></div></div>
-                <div class="col-4"><div class="finance-card bg-danger"><h6 id="expDisplayTop">0</h6><small>Expense</small></div></div>
-                <div class="col-4"><div class="finance-card bg-success"><h6 id="profitDisplay">0</h6><small>Net</small></div></div>
-            </div>
-            <div class="row g-2 mb-3">
-                <div class="col-6"><input type="text" id="expDesc" class="form-control" placeholder="Item"></div>
-                <div class="col-3"><input type="number" id="expAmount" class="form-control" placeholder="Rs."></div>
-                <div class="col-3"><button class="btn btn-warning w-100" onclick="addExpense()">Add</button></div>
-            </div>
-            <table class="table small"><tbody id="expensesBody"></tbody></table>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead><tr><th>Student</th><th>WhatsApp</th><th>Actions</th></tr></thead>
+                <tbody id="detailsBody"></tbody>
+            </table>
         </div>
     </div>
 </div>
 
-<div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content"><div class="modal-body text-center">
-    <div id="printableIDCard" class="id-card-wrap">
-        <div class="id-card-header">NENADIYA INSTITUTE</div>
-        <div class="id-content">
-            <img id="idPhoto" src="" class="id-photo-frame">
-            <div class="id-details">
-                <h5 id="idName"></h5>
-                <p>Grade: <span id="idGradeDisp"></span></p>
-                <p>Index: <span id="idIndex"></span></p>
-                <p>Valid: 2026 Academic Year</p>
-            </div>
-        </div>
-        <div class="id-footer">
-            <div id="idQrCode"></div>
-        </div>
-    </div>
-    <div class="mt-3"><button class="btn btn-success" onclick="downloadID()">Download ID Card</button></div>
-</div></div></div></div>
-
 <script>
-    let students = JSON.parse(localStorage.getItem('nenadiya_db')) || [];
-    let expenses = JSON.parse(localStorage.getItem('nenadiya_expenses')) || [];
-    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-    let html5QrCode;
+    // YOUR FIREBASE CONFIG (Already filled for you!)
+    const firebaseConfig = {
+        apiKey: "AIzaSyCWLthmljW8jW4Y97SJgnfw0GLBIBQjF3M",
+        authDomain: "nenadiya-database.firebaseapp.com",
+        databaseURL: "https://nenadiya-database-default-rtdb.firebaseio.com/",
+        projectId: "nenadiya-database",
+        storageBucket: "nenadiya-database.firebasestorage.app",
+        messagingSenderId: "223459963945",
+        appId: "1:223459963945:web:5b2781f3ed85fe9f25838"
+    };
 
-    // Beep sound function
-    function playBeep() {
-        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioCtx.createOscillator();
-        const gainNode = audioCtx.createGain();
-        oscillator.connect(gainNode);
-        gainNode.connect(audioCtx.destination);
-        oscillator.type = 'sine';
-        oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); 
-        gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        oscillator.start();
-        oscillator.stop(audioCtx.currentTime + 0.1);
-    }
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    let students = [];
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
 
     window.onload = () => {
         const mSel = document.getElementById('activeMonth');
@@ -183,130 +82,60 @@
         mSel.value = new Date().getMonth();
 
         const gSel = document.getElementById('activeGrade');
-        for(let i=1; i<=11; i++) { ['N', 'S', 'A'].forEach(t => gSel.add(new Option(`Grade ${i} (${t})`, `Grade ${i} (${t})`))); }
-        for(let i=1; i<=7; i++) { gSel.add(new Option(`Individual ${i}`, `Individual ${i}`)); }
+        for(let i=1; i<=11; i++) { gSel.add(new Option(`Grade ${i}`, `Grade ${i}`)); }
 
-        document.getElementById('attDate').valueAsDate = new Date();
-        renderAll();
+        // START LISTENING TO CLOUD
+        db.ref('nenadiya_data/students').on('value', (snapshot) => {
+            students = snapshot.val() || [];
+            renderAll();
+            document.getElementById('saveStatus').innerText = "Live Cloud Synced";
+        });
     };
 
-    function saveToStorage() {
-        localStorage.setItem('nenadiya_db', JSON.stringify(students));
-        localStorage.setItem('nenadiya_expenses', JSON.stringify(expenses));
-        document.getElementById('saveStatus').innerText = "Sync: " + new Date().toLocaleTimeString();
+    function addStudent() {
+        const n = document.getElementById('regName').value;
+        const w = document.getElementById('regWa').value;
+        if(!n || !w) return alert("Enter Name and Phone");
+
+        const newStudent = {
+            id: "NEN" + Math.floor(1000 + Math.random() * 9000),
+            name: n, wa: w, grade: document.getElementById('activeGrade').value,
+            annual: Array.from({length:12}, () => ({paid:false, att:[]}))
+        };
+        
+        students.push(newStudent);
+        saveToCloud();
+        document.getElementById('regName').value = "";
+        document.getElementById('regWa').value = "";
     }
 
-    function showTab(id, el) {
-        document.querySelectorAll('.tab-content').forEach(s => s.classList.add('d-none'));
-        document.getElementById(id + 'Sec').classList.remove('d-none');
-        document.querySelectorAll('.nav-link').forEach(n => n.classList.remove('active'));
-        el.classList.add('active');
-        if(id === 'attendance' && html5QrCode) html5QrCode.stop(); // Stop camera if switching tabs
+    function saveToCloud() {
+        db.ref('nenadiya_data/students').set(students);
     }
 
     function renderAll() {
-        const m = parseInt(document.getElementById('activeMonth').value);
         const g = document.getElementById('activeGrade').value;
-        const q = document.getElementById('stuSearch').value.toLowerCase();
-        const feeAmt = parseFloat(document.getElementById('classFee').value) || 0;
-        
-        const filtered = students.filter(s => s.grade === g && s.name.toLowerCase().includes(q));
-
-        let regHtml = "", attHtml = "", feeHtml = "", markHtml = "", rev = 0;
-
-        filtered.forEach(s => {
-            const realIdx = students.indexOf(s);
-            regHtml += `<tr><td><img src="${s.photo}" class="stu-photo"></td><td><b>${s.name}</b><br><small>${s.id}</small></td><td>${s.wa}</td><td><button class="btn btn-sm btn-outline-primary" onclick="showID(${realIdx})">ID</button> <button class="btn btn-sm btn-outline-danger" onclick="deleteStudent(${realIdx})">X</button></td></tr>`;
-            
-            let hist = s.annual[m].att.map(a => `<span class="badge-att ${a.status==='P'?'bg-present':'bg-absent'}">${a.date.split('-')[2]}</span>`).join('');
-            attHtml += `<tr><td><b>${s.name}</b></td><td><button class="btn btn-sm btn-success" onclick="markAtt(${realIdx},'P')">P</button></td><td>${hist}</td></tr>`;
-            
-            if(s.annual[m].paid) rev += feeAmt;
-            feeHtml += `<tr><td><b>${s.name}</b></td><td><input type="checkbox" onchange="updatePaidStatus(${realIdx}, this.checked)" ${s.annual[m].paid?'checked':''}></td><td><button class="btn btn-sm btn-success" onclick="sendMsg(${realIdx}, 'receipt')">WA</button></td></tr>`;
-            
-            markHtml += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control form-control-sm" value="${s.annual[m].mark||''}" onchange="updateMark(${realIdx}, this.value)"></td><td><button class="btn btn-sm btn-primary" onclick="sendMsg(${realIdx}, 'report')">Notify</button></td></tr>`;
+        const filtered = students.filter(s => s.grade === g);
+        let html = "";
+        filtered.forEach((s, idx) => {
+            html += `<tr>
+                <td><b>${s.name}</b><br><small>${s.id}</small></td>
+                <td>${s.wa}</td>
+                <td><button class="btn btn-sm btn-danger" onclick="deleteStudent(${students.indexOf(s)})">Delete</button></td>
+            </tr>`;
         });
-
-        document.getElementById('detailsBody').innerHTML = regHtml;
-        document.getElementById('attBody').innerHTML = attHtml;
-        document.getElementById('feesBody').innerHTML = feeHtml;
-        document.getElementById('marksBody').innerHTML = markHtml;
-
-        const totalExp = expenses.filter(e => new Date(e.date).getMonth() === m).reduce((acc, curr) => acc + parseFloat(curr.amount), 0);
-        document.getElementById('revDisplay').innerText = rev.toLocaleString();
-        document.getElementById('expDisplayTop').innerText = totalExp.toLocaleString();
-        document.getElementById('profitDisplay').innerText = (rev - totalExp).toLocaleString();
+        document.getElementById('detailsBody').innerHTML = html;
     }
 
-    async function addStudent() {
-        const n=document.getElementById('regName').value, w=document.getElementById('regWa').value, f=document.getElementById('regPhoto').files[0];
-        if(!n || !w) return alert("Fill Name and WhatsApp");
-        let p = "https://via.placeholder.com/100"; if(f) p = await resizeImage(f);
-        students.push({ 
-            id: "NEN" + Math.floor(1000 + Math.random() * 9000), 
-            name: n, wa: w, photo: p, grade: document.getElementById('activeGrade').value,
-            annual: Array.from({length:12}, () => ({mark:null, paid:false, att:[]}))
-        });
-        saveToStorage(); renderAll();
-    }
-
-    function showID(i) {
-        const s = students[i];
-        document.getElementById('idPhoto').src = s.photo;
-        document.getElementById('idName').innerText = s.name;
-        document.getElementById('idGradeDisp').innerText = s.grade;
-        document.getElementById('idIndex').innerText = s.id;
-        document.getElementById("idQrCode").innerHTML = "";
-        new QRCode(document.getElementById("idQrCode"), { text: s.id, width: 80, height: 80 });
-        new bootstrap.Modal(document.getElementById('idModal')).show();
-    }
+    function deleteStudent(i) { if(confirm("Delete student?")) { students.splice(i,1); saveToCloud(); } }
 
     function startScanner() {
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
-            playBeep();
-            markAttendanceByQR(txt);
-        }).catch(err => alert("Camera blocked or not found."));
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (id) => {
+            alert("Scanned ID: " + id);
+            // Attendance logic goes here
+        });
     }
-
-    function markAttendanceByQR(id) {
-        const m = parseInt(document.getElementById('activeMonth').value);
-        const d = document.getElementById('attDate').value;
-        const sIdx = students.findIndex(s => s.id === id);
-        if(sIdx !== -1) {
-            if(!students[sIdx].annual[m].att.some(a => a.date === d)) {
-                students[sIdx].annual[m].att.push({date: d, status: 'P'});
-                document.getElementById('scanResult').innerHTML = `<b class="text-success">${students[sIdx].name} marked!</b>`;
-                saveToStorage(); renderAll();
-            } else {
-                document.getElementById('scanResult').innerHTML = `<b class="text-warning">Already marked.</b>`;
-            }
-        }
-    }
-
-    function markAtt(idx, status) {
-        const d = document.getElementById('attDate').value;
-        students[idx].annual[document.getElementById('activeMonth').value].att.push({date: d, status: status});
-        saveToStorage(); renderAll();
-    }
-
-    function updatePaidStatus(i, v) { 
-        students[i].annual[document.getElementById('activeMonth').value].paid = v; 
-        saveToStorage(); renderAll(); 
-    }
-
-    function downloadID() { html2canvas(document.getElementById('printableIDCard'),{scale:4}).then(c=>{ let l=document.createElement('a'); l.download=`ID_${document.getElementById('idName').innerText}.png`; l.href=c.toDataURL(); l.click(); }); }
-    
-    function resizeImage(file) { return new Promise(resolve => { const reader = new FileReader(); reader.onload = (e) => { const img = new Image(); img.onload = () => { const canvas = document.createElement('canvas'); const MAX = 120; canvas.width = MAX; canvas.height = img.height * (MAX / img.width); canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height); resolve(canvas.toDataURL('image/jpeg', 0.5)); }; img.src = e.target.result; }; reader.readAsDataURL(file); }); }
-
-    function exportData() {
-        const blob = new Blob([JSON.stringify({students, expenses})], {type:"application/json"});
-        const link = document.createElement('a'); link.href = URL.createObjectURL(blob);
-        link.download = `Nenadiya_Backup.json`; link.click();
-    }
-
-    function deleteStudent(i) { if(confirm("Delete student?")) { students.splice(i,1); saveToStorage(); renderAll(); } }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
