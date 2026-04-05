@@ -16,59 +16,68 @@
 
     <style>
         :root { --navy: #0f172a; --accent: #2563eb; --red: #e11d48; --green: #059669; }
-        body { background: #f1f5f9; font-family: 'Segoe UI', Arial, sans-serif; }
-        .tab-sec { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; }
+        .tab-sec { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .id-card { width: 350px; height: 500px; background: white; border-radius: 20px; border: 2px solid #ddd; margin: auto; overflow: hidden; position: relative; }
         .id-top { height: 160px; background: var(--navy); color: white; text-align: center; padding-top: 20px; border-bottom: 8px solid var(--red); }
         .id-photo-wrap { width: 130px; height: 130px; border-radius: 50%; border: 5px solid white; margin: -70px auto 0; overflow: hidden; background: #eee; position: relative; z-index: 5; }
         .id-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .att-badge { cursor: pointer; transition: 0.2s; }
-        .att-badge:hover { background-color: var(--red) !important; color: white !important; }
-        #reader { width: 100%; border-radius: 10px; overflow: hidden; margin-bottom: 15px; display: none; }
+        .att-badge { cursor: pointer; transition: 0.2s; font-size: 11px; }
+        #reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; margin-bottom: 15px; }
+        .sticky-top-custom { position: sticky; top: 0; z-index: 1020; background: #f1f5f9; padding: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="bg-dark text-white p-3 text-center mb-4">
+<div class="bg-dark text-white p-3 text-center">
     <h2 class="fw-bold m-0">නැණදිය (NENADIYA)</h2>
     <div id="dbStatus" class="badge bg-warning text-dark mt-2">Connecting...</div>
+    <div id="dueAlert" class="mt-2 small text-warning fw-bold d-none">⚠️ 25th Reached: Send Monthly Reminders!</div>
 </div>
 
 <div class="container-fluid pb-5">
-    <div class="row g-2 mb-4 bg-white p-3 rounded-3 shadow-sm sticky-top">
-        <div class="col-6 col-md-3"><select id="activeGrade" class="form-select border-primary" onchange="renderAll()"></select></div>
-        <div class="col-6 col-md-3"><select id="activeMonth" class="form-select border-primary" onchange="renderAll()"></select></div>
-        <div class="col-8 col-md-4"><input type="text" id="stuSearch" class="form-control" placeholder="Search..." onkeyup="renderAll()"></div>
-        <div class="col-4 col-md-2"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#regModal"><b>+ Add</b></button></div>
+    <div class="sticky-top-custom">
+        <div class="row g-2 bg-white p-3 rounded-3 shadow-sm">
+            <div class="col-6 col-md-3"><select id="activeGrade" class="form-select border-primary" onchange="renderAll()"></select></div>
+            <div class="col-6 col-md-3"><select id="activeMonth" class="form-select border-primary" onchange="renderAll()"></select></div>
+            <div class="col-8 col-md-4"><input type="text" id="stuSearch" class="form-control" placeholder="Search..." onkeyup="renderAll()"></div>
+            <div class="col-4 col-md-2"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#regModal"><b>+ Add</b></button></div>
+        </div>
     </div>
 
-    <ul class="nav nav-pills nav-justified mb-4">
+    <ul class="nav nav-pills nav-justified my-4">
         <li class="nav-item"><a class="nav-link active fw-bold" onclick="showTab('att')">Attendance</a></li>
         <li class="nav-item"><a class="nav-link fw-bold" onclick="showTab('fees')">Fees</a></li>
-        <li class="nav-item"><a class="nav-link fw-bold" onclick="showTab('marks')">Marks</a></li>
+        <li class="nav-item"><a class="nav-link fw-bold" onclick="showTab('marks')">Exam Reports</a></li>
     </ul>
 
     <div id="attSec" class="tab-sec">
         <div class="d-flex justify-content-between mb-3">
             <input type="date" id="attDate" class="form-control w-50" onchange="renderAll()">
-            <button class="btn btn-dark" onclick="toggleScanner()"><i class="bi bi-qr-code-scan"></i> QR Scan</button>
+            <button class="btn btn-dark" onclick="toggleScanner()"><i class="bi bi-qr-code-scan"></i> Scanner</button>
         </div>
         <div id="reader"></div>
         <div class="table-responsive"><table class="table align-middle"><tbody id="attBody"></tbody></table></div>
     </div>
 
     <div id="feesSec" class="tab-sec d-none">
-        <div class="table-responsive"><table class="table align-middle"><tbody id="feeBody"></tbody></table></div>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead class="table-light"><tr><th>Student</th><th>History</th><th>Status</th><th>WhatsApp</th></tr></thead>
+            <tbody id="feeBody"></tbody>
+        </table></div>
     </div>
 
     <div id="marksSec" class="tab-sec d-none">
-        <div class="table-responsive"><table class="table align-middle"><tbody id="marksBody"></tbody></table></div>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead class="table-light"><tr><th>Student</th><th>Mark</th><th>Rank</th><th>Progress</th><th>Report</th></tr></thead>
+            <tbody id="marksBody"></tbody>
+        </table></div>
     </div>
 </div>
 
 <div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center">
     <div id="idCardToExport" class="id-card">
-        <div class="id-top"><h3>NENADIYA</h3><p>Institute</p></div>
+        <div class="id-top"><h3>NENADIYA</h3><p>Higher Educational Institute</p></div>
         <div class="id-photo-wrap"><img id="idImg" src=""></div>
         <div class="id-content text-center p-3">
             <h4 id="idName" class="fw-bold mb-1"></h4>
@@ -81,11 +90,12 @@
 </div></div></div>
 
 <div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4">
+    <h5 class="mb-3">Register Student</h5>
     <input type="text" id="regName" class="form-control mb-2" placeholder="Full Name">
     <input type="text" id="regWa" class="form-control mb-2" placeholder="WhatsApp (947...)">
     <select id="regGrade" class="form-select mb-3"></select>
     <input type="file" id="regPhoto" class="form-control mb-3" accept="image/*">
-    <button class="btn btn-primary w-100" onclick="saveStudent()">Save</button>
+    <button class="btn btn-primary w-100" onclick="saveStudent()">Save Student</button>
 </div></div></div>
 
 <script>
@@ -105,8 +115,7 @@
     let html5QrCode;
 
     window.onload = () => {
-        const gSel = document.getElementById('activeGrade');
-        const regGSel = document.getElementById('regGrade');
+        const gSel = document.getElementById('activeGrade'), regGSel = document.getElementById('regGrade');
         for(let i=1; i<=13; i++) ['N','S','A'].forEach(s => {
             let o = new Option(`Grade ${i}${s}`, `Grade ${i}${s}`);
             gSel.add(o); regGSel.add(o.cloneNode(true));
@@ -122,10 +131,15 @@
         db.ref('nenadiya_v4').on('value', (snap) => {
             students = snap.val() || [];
             renderAll();
+            check25th();
             document.getElementById('dbStatus').innerText = "Live Cloud Active";
             document.getElementById('dbStatus').className = "badge bg-success mt-2";
         });
     };
+
+    function check25th() {
+        if(new Date().getDate() >= 25) document.getElementById('dueAlert').classList.remove('d-none');
+    }
 
     function renderAll() {
         const m = parseInt(document.getElementById('activeMonth').value);
@@ -139,94 +153,73 @@
         filtered.forEach(s => {
             const idx = students.indexOf(s);
             
-            // Attendance History with Edit (Click to remove)
+            // Attendance History
             let attHist = "";
             if(s.att && s.att[m]) {
-                s.att[m].sort().forEach(date => {
-                    const day = date.split('-')[2];
-                    attHist += `<span class="badge bg-success me-1 att-badge" onclick="removeAtt(${idx}, '${date}')" title="Click to Remove">P:${day}</span>`;
+                s.att[m].sort().forEach(dt => {
+                    attHist += `<span class="badge bg-success me-1 att-badge" onclick="removeAtt(${idx}, '${dt}')">P:${dt.split('-')[2]}</span>`;
                 });
             }
             let isP = s.att?.[m]?.includes(d);
-
             attH += `<tr><td><b>${s.name}</b></td><td>${attHist}</td><td class="text-end">
                 <button class="btn btn-sm ${isP?'btn-success':'btn-outline-primary'}" onclick="markAtt(${idx},'P')">P</button>
                 <button class="btn btn-sm btn-outline-danger" onclick="markAtt(${idx},'A')">A</button>
                 <button class="btn btn-sm btn-info ms-1" onclick="showID(${idx})">ID</button></td></tr>`;
             
-            // Fee History
+            // Fee History & Bilingual Messages
             let feeHist = "";
-            months.forEach((name, i) => { if(s.fees?.[i]) feeHist += `<span class="badge bg-primary me-1" style="font-size:10px">${name.slice(0,3)}</span>`; });
+            months.forEach((name, i) => { if(s.fees?.[i]) feeHist += `<span class="badge bg-primary me-1" style="font-size:9px">${name.slice(0,3)}</span>`; });
             let paid = s.fees?.[m];
-            feeH += `<tr><td><b>${s.name}</b></td><td>${feeHist}</td><td class="text-end">
-                <span class="badge ${paid?'bg-success':'bg-danger'}">${paid?'PAID':'DUE'}</span>
-                <button class="btn btn-sm btn-outline-dark ms-1" onclick="toggleFee(${idx},${!paid})">${paid?'Undo':'Pay'}</button></td></tr>`;
+            feeH += `<tr><td><b>${s.name}</b></td><td>${feeHist}</td>
+                <td><button class="btn btn-sm ${paid?'btn-success':'btn-danger'}" onclick="toggleFee(${idx},${!paid})">${paid?'PAID':'DUE'}</button></td>
+                <td><button class="btn btn-sm btn-success" onclick="sendWa(${idx},'fee')"><i class="bi bi-whatsapp"></i></button></td></tr>`;
 
-            // Marks
+            // Marks, Rank & Remarks
             const rank = sorted.findIndex(x => x.id === s.id) + 1;
             const score = s.marks?.[m] || 0;
-            const remark = score > 75 ? "Excellent" : score > 50 ? "Good" : "Try Hard";
+            const remark = score >= 75 ? "Excellent Progress" : score >= 50 ? "Good Progress" : "Try Hard";
             marksH += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control w-75" value="${score}" onchange="setMark(${idx},this.value)"></td>
-                <td>#${rank}</td><td><button class="btn btn-sm btn-primary" onclick="sendWa(${idx},'report',${rank},'${remark}')">Report</button></td></tr>`;
+                <td><span class="badge bg-dark"># ${rank}</span></td><td><small>${remark}</small></td>
+                <td><button class="btn btn-sm btn-primary" onclick="sendWa(${idx},'report',${rank},'${remark}')">Send</button></td></tr>`;
         });
         document.getElementById('attBody').innerHTML = attH;
         document.getElementById('feeBody').innerHTML = feeH;
         document.getElementById('marksBody').innerHTML = marksH;
     }
 
-    // QR SCANNER LOGIC
+    function sendWa(i, type, rank, rem) { 
+        const s = students[i], m = months[document.getElementById('activeMonth').value];
+        const isPaid = s.fees?.[document.getElementById('activeMonth').value];
+        let msg = "";
+
+        if(type === 'fee') {
+            if(isPaid) {
+                msg = `*නැණදිය (Nenadiya) - Payment Received*%0AStudent: ${s.name}%0AMonth: ${m}%0AStatus: SUCCESSFUL / සාර්ථකයි ✅%0AThank you! / ස්තූතියි!`;
+            } else {
+                msg = `*නැණදිය (Nenadiya) - Fee Reminder*%0AStudent: ${s.name}%0AMonth: ${m}%0AStatus: PENDING / ගෙවීමට ඇත ❌%0APlease settle the fee before the end of the month.%0Aකරුණාකර මාසය අවසන් වීමට පෙර පන්ති ගාස්තු ගෙවා අවසන් කරන්න.`;
+            }
+        } else {
+            const score = s.marks?.[document.getElementById('activeMonth').value] || 0;
+            const sinRem = rem === "Excellent Progress" ? "විශිෂ්ටයි" : rem === "Good Progress" ? "සාර්ථකයි" : "තව උත්සාහ කරන්න";
+            msg = `*නැණදිය (Nenadiya) Progress Report*%0AStudent: ${s.name}%0AMonth: ${m}%0A--------------------------%0AMarks: ${score}/100%0AClass Rank: ${rank}%0AProgress: ${rem} / ${sinRem}%0A--------------------------`;
+        }
+        window.open(`https://wa.me/${s.wa}?text=${msg}`);
+    }
+
+    // SYSTEM FUNCTIONS
     function toggleScanner() {
         const reader = document.getElementById('reader');
-        if(reader.style.display === 'block') {
-            html5QrCode.stop();
-            reader.style.display = 'none';
-        } else {
-            reader.style.display = 'block';
-            html5QrCode = new Html5Qrcode("reader");
-            html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => {
-                const idx = students.findIndex(s => s.id === txt);
-                if(idx !== -1) { markAtt(idx, 'P'); alert("Marked: " + students[idx].name); }
-            });
-        }
+        if(reader.style.display === 'block') { html5QrCode.stop(); reader.style.display = 'none'; } 
+        else { reader.style.display = 'block'; html5QrCode = new Html5Qrcode("reader"); html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (txt) => { const idx = students.findIndex(s => s.id === txt); if(idx !== -1) { markAtt(idx, 'P'); alert("Marked: " + students[idx].name); } }); }
     }
-
-    function removeAtt(i, date) {
-        if(confirm("Remove attendance for " + date + "?")) {
-            const m = parseInt(document.getElementById('activeMonth').value);
-            students[i].att[m] = students[i].att[m].filter(d => d !== date);
-            db.ref('nenadiya_v4').set(students);
-        }
-    }
-
-    function markAtt(i, type) {
-        const m = document.getElementById('activeMonth').value, d = document.getElementById('attDate').value;
-        if(!students[i].att) students[i].att = {};
-        if(!students[i].att[m]) students[i].att[m] = [];
-        if(type==='P' && !students[i].att[m].includes(d)) students[i].att[m].push(d);
-        if(type==='A') students[i].att[m] = students[i].att[m].filter(x => x !== d);
-        db.ref('nenadiya_v4').set(students);
-    }
-
-    async function saveStudent() {
-        const f = document.getElementById('regPhoto').files[0];
-        let ph = "https://via.placeholder.com/150";
-        if(f) ph = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(f); });
-        students.push({ id: "NEN" + Date.now().toString().slice(-5), name: document.getElementById('regName').value, wa: document.getElementById('regWa').value, grade: document.getElementById('regGrade').value, photo: ph, att:{}, fees:{}, marks:{} });
-        db.ref('nenadiya_v4').set(students);
-        bootstrap.Modal.getInstance(document.getElementById('regModal')).hide();
-    }
-
+    function removeAtt(i, date) { if(confirm("Remove attendance?")) { const m = parseInt(document.getElementById('activeMonth').value); students[i].att[m] = students[i].att[m].filter(d => d !== date); db.ref('nenadiya_v4').set(students); } }
+    function markAtt(i, type) { const m = document.getElementById('activeMonth').value, d = document.getElementById('attDate').value; if(!students[i].att) students[i].att = {}; if(!students[i].att[m]) students[i].att[m] = []; if(type==='P' && !students[i].att[m].includes(d)) students[i].att[m].push(d); if(type==='A') students[i].att[m] = students[i].att[m].filter(x => x !== d); db.ref('nenadiya_v4').set(students); }
+    async function saveStudent() { const f = document.getElementById('regPhoto').files[0]; let ph = "https://via.placeholder.com/150"; if(f) ph = await new Promise(r => { const rd = new FileReader(); rd.onload = e => r(e.target.result); rd.readAsDataURL(f); }); students.push({ id: "NEN" + Date.now().toString().slice(-5), name: document.getElementById('regName').value, wa: document.getElementById('regWa').value, grade: document.getElementById('regGrade').value, photo: ph, att:{}, fees:{}, marks:{} }); db.ref('nenadiya_v4').set(students); bootstrap.Modal.getInstance(document.getElementById('regModal')).hide(); }
     function toggleFee(i, v) { if(!students[i].fees) students[i].fees = {}; students[i].fees[document.getElementById('activeMonth').value] = v; db.ref('nenadiya_v4').set(students); }
     function setMark(i, v) { if(!students[i].marks) students[i].marks = {}; students[i].marks[document.getElementById('activeMonth').value] = parseInt(v); db.ref('nenadiya_v4').set(students); }
     function showTab(id) { document.querySelectorAll('.tab-sec').forEach(s => s.classList.add('d-none')); document.getElementById(id+'Sec').classList.remove('d-none'); document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active')); event.target.classList.add('active'); }
     function showID(i) { const s = students[i]; document.getElementById('idName').innerText = s.name; document.getElementById('idGradeDisp').innerText = s.grade; document.getElementById('idVal').innerText = s.id; document.getElementById('idImg').src = s.photo; document.getElementById('idQr').innerHTML = ""; new QRCode(document.getElementById('idQr'), { text: s.id, width: 80, height: 80 }); new bootstrap.Modal(document.getElementById('idModal')).show(); }
     function downloadID() { html2canvas(document.getElementById('idCardToExport')).then(c => { let l = document.createElement('a'); l.download = "ID.png"; l.href = c.toDataURL(); l.click(); }); }
-    function sendWa(i, type, rank, rem) { 
-        const s = students[i], m = months[document.getElementById('activeMonth').value];
-        let msg = type === 'fee' ? `*නැණදිය (Nenadiya) Fee Status*%0AStudent: ${s.name}%0AMonth: ${m}%0AStatus: ${s.fees?.[document.getElementById('activeMonth').value]?'PAID/ගෙවා ඇත ✅':'DUE/ගෙවීමට ඇත ❌'}` 
-        : `*නැණදිය Report*%0AStudent: ${s.name}%0AMarks: ${s.marks?.[document.getElementById('activeMonth').value]||0}/100%0ARank: ${rank}%0AProgress: ${rem}`;
-        window.open(`https://wa.me/${s.wa}?text=${msg}`);
-    }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
