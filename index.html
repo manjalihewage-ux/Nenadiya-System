@@ -6,7 +6,7 @@
     <title>Nenadiya Institute | Master Admin</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -16,15 +16,16 @@
 
     <style>
         :root { --navy: #0f172a; --accent: #2563eb; --red: #e11d48; --green: #059669; }
-        body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; }
-        .tab-sec { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        body { background: #f1f5f9; font-family: 'Segoe UI', sans-serif; font-size: 14px; }
+        .tab-sec { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
         .id-card { width: 350px; height: 500px; background: white; border-radius: 20px; border: 2px solid #ddd; margin: auto; overflow: hidden; position: relative; }
         .id-top { height: 160px; background: var(--navy); color: white; text-align: center; padding-top: 20px; border-bottom: 8px solid var(--red); }
         .id-photo-wrap { width: 130px; height: 130px; border-radius: 50%; border: 5px solid white; margin: -70px auto 0; overflow: hidden; background: #eee; position: relative; z-index: 5; }
         .id-photo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        .att-badge { cursor: pointer; transition: 0.2s; font-size: 11px; }
+        .att-badge { cursor: pointer; transition: 0.2s; font-size: 10px; margin-bottom: 2px; display: inline-block; }
         #reader { width: 100%; border-radius: 10px; overflow: hidden; display: none; margin-bottom: 15px; }
-        .sticky-top-custom { position: sticky; top: 0; z-index: 1020; background: #f1f5f9; padding: 10px 0; }
+        .wa-btn { background-color: #25D366; color: white; font-weight: bold; border: none; padding: 5px 10px; border-radius: 5px; }
+        .wa-btn:hover { background-color: #128C7E; color: white; }
     </style>
 </head>
 <body>
@@ -36,16 +37,14 @@
 </div>
 
 <div class="container-fluid pb-5">
-    <div class="sticky-top-custom">
-        <div class="row g-2 bg-white p-3 rounded-3 shadow-sm">
-            <div class="col-6 col-md-3"><select id="activeGrade" class="form-select border-primary" onchange="renderAll()"></select></div>
-            <div class="col-6 col-md-3"><select id="activeMonth" class="form-select border-primary" onchange="renderAll()"></select></div>
-            <div class="col-8 col-md-4"><input type="text" id="stuSearch" class="form-control" placeholder="Search..." onkeyup="renderAll()"></div>
-            <div class="col-4 col-md-2"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#regModal"><b>+ Add</b></button></div>
-        </div>
+    <div class="row g-2 bg-white p-3 rounded-3 shadow-sm sticky-top mt-2">
+        <div class="col-6 col-md-3"><select id="activeGrade" class="form-select border-primary" onchange="renderAll()"></select></div>
+        <div class="col-6 col-md-3"><select id="activeMonth" class="form-select border-primary" onchange="renderAll()"></select></div>
+        <div class="col-8 col-md-4"><input type="text" id="stuSearch" class="form-control" placeholder="Search Student..." onkeyup="renderAll()"></div>
+        <div class="col-4 col-md-2"><button class="btn btn-primary w-100" data-bs-toggle="modal" data-bs-target="#regModal"><b>+ Add</b></button></div>
     </div>
 
-    <ul class="nav nav-pills nav-justified my-4">
+    <ul class="nav nav-pills nav-justified my-3">
         <li class="nav-item"><a class="nav-link active fw-bold" onclick="showTab('att')">Attendance</a></li>
         <li class="nav-item"><a class="nav-link fw-bold" onclick="showTab('fees')">Fees</a></li>
         <li class="nav-item"><a class="nav-link fw-bold" onclick="showTab('marks')">Exam Reports</a></li>
@@ -54,7 +53,7 @@
     <div id="attSec" class="tab-sec">
         <div class="d-flex justify-content-between mb-3">
             <input type="date" id="attDate" class="form-control w-50" onchange="renderAll()">
-            <button class="btn btn-dark" onclick="toggleScanner()"><i class="bi bi-qr-code-scan"></i> Scanner</button>
+            <button class="btn btn-dark" onclick="toggleScanner()">QR Scanner</button>
         </div>
         <div id="reader"></div>
         <div class="table-responsive"><table class="table align-middle"><tbody id="attBody"></tbody></table></div>
@@ -62,22 +61,31 @@
 
     <div id="feesSec" class="tab-sec d-none">
         <div class="table-responsive"><table class="table align-middle">
-            <thead class="table-light"><tr><th>Student</th><th>History</th><th>Status</th><th>WhatsApp</th></tr></thead>
+            <thead class="table-light"><tr><th>Student</th><th>History</th><th>Action</th><th>WhatsApp</th></tr></thead>
             <tbody id="feeBody"></tbody>
         </table></div>
     </div>
 
     <div id="marksSec" class="tab-sec d-none">
         <div class="table-responsive"><table class="table align-middle">
-            <thead class="table-light"><tr><th>Student</th><th>Mark</th><th>Rank</th><th>Progress</th><th>Report</th></tr></thead>
+            <thead class="table-light"><tr><th>Student</th><th>Mark</th><th>Position</th><th>Progress</th><th>Action</th></tr></thead>
             <tbody id="marksBody"></tbody>
         </table></div>
     </div>
 </div>
 
+<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4">
+    <h5 class="mb-3">Register Student</h5>
+    <input type="text" id="regName" class="form-control mb-2" placeholder="Full Name">
+    <input type="text" id="regWa" class="form-control mb-2" placeholder="WhatsApp (947...)">
+    <select id="regGrade" class="form-select mb-3"></select>
+    <input type="file" id="regPhoto" class="form-control mb-3" accept="image/*">
+    <button class="btn btn-primary w-100" onclick="saveStudent()">Save Student</button>
+</div></div></div>
+
 <div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center">
     <div id="idCardToExport" class="id-card">
-        <div class="id-top"><h3>NENADIYA</h3><p>Higher Educational Institute</p></div>
+        <div class="id-top"><h3>NENADIYA</h3><p>Institute</p></div>
         <div class="id-photo-wrap"><img id="idImg" src=""></div>
         <div class="id-content text-center p-3">
             <h4 id="idName" class="fw-bold mb-1"></h4>
@@ -87,15 +95,6 @@
         </div>
     </div>
     <button class="btn btn-success mt-3" onclick="downloadID()">Download Card</button>
-</div></div></div>
-
-<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4">
-    <h5 class="mb-3">Register Student</h5>
-    <input type="text" id="regName" class="form-control mb-2" placeholder="Full Name">
-    <input type="text" id="regWa" class="form-control mb-2" placeholder="WhatsApp (947...)">
-    <select id="regGrade" class="form-select mb-3"></select>
-    <input type="file" id="regPhoto" class="form-control mb-3" accept="image/*">
-    <button class="btn btn-primary w-100" onclick="saveStudent()">Save Student</button>
 </div></div></div>
 
 <script>
@@ -131,15 +130,11 @@
         db.ref('nenadiya_v4').on('value', (snap) => {
             students = snap.val() || [];
             renderAll();
-            check25th();
+            if(new Date().getDate() >= 25) document.getElementById('dueAlert').classList.remove('d-none');
             document.getElementById('dbStatus').innerText = "Live Cloud Active";
             document.getElementById('dbStatus').className = "badge bg-success mt-2";
         });
     };
-
-    function check25th() {
-        if(new Date().getDate() >= 25) document.getElementById('dueAlert').classList.remove('d-none');
-    }
 
     function renderAll() {
         const m = parseInt(document.getElementById('activeMonth').value);
@@ -155,32 +150,30 @@
             
             // Attendance History
             let attHist = "";
-            if(s.att && s.att[m]) {
-                s.att[m].sort().forEach(dt => {
-                    attHist += `<span class="badge bg-success me-1 att-badge" onclick="removeAtt(${idx}, '${dt}')">P:${dt.split('-')[2]}</span>`;
-                });
-            }
+            if(s.att && s.att[m]) s.att[m].sort().forEach(dt => {
+                attHist += `<span class="badge bg-success me-1 att-badge" onclick="removeAtt(${idx}, '${dt}')">P:${dt.split('-')[2]}</span>`;
+            });
             let isP = s.att?.[m]?.includes(d);
             attH += `<tr><td><b>${s.name}</b></td><td>${attHist}</td><td class="text-end">
                 <button class="btn btn-sm ${isP?'btn-success':'btn-outline-primary'}" onclick="markAtt(${idx},'P')">P</button>
                 <button class="btn btn-sm btn-outline-danger" onclick="markAtt(${idx},'A')">A</button>
                 <button class="btn btn-sm btn-info ms-1" onclick="showID(${idx})">ID</button></td></tr>`;
             
-            // Fee History & Bilingual Messages
+            // Fee History & WhatsApp Buttons
             let feeHist = "";
             months.forEach((name, i) => { if(s.fees?.[i]) feeHist += `<span class="badge bg-primary me-1" style="font-size:9px">${name.slice(0,3)}</span>`; });
             let paid = s.fees?.[m];
             feeH += `<tr><td><b>${s.name}</b></td><td>${feeHist}</td>
                 <td><button class="btn btn-sm ${paid?'btn-success':'btn-danger'}" onclick="toggleFee(${idx},${!paid})">${paid?'PAID':'DUE'}</button></td>
-                <td><button class="btn btn-sm btn-success" onclick="sendWa(${idx},'fee')"><i class="bi bi-whatsapp"></i></button></td></tr>`;
+                <td><button class="wa-btn btn-sm" onclick="sendWa(${idx},'fee')">WhatsApp</button></td></tr>`;
 
-            // Marks, Rank & Remarks
+            // Marks, Rank & Bilingual Remarks
             const rank = sorted.findIndex(x => x.id === s.id) + 1;
             const score = s.marks?.[m] || 0;
             const remark = score >= 75 ? "Excellent Progress" : score >= 50 ? "Good Progress" : "Try Hard";
             marksH += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control w-75" value="${score}" onchange="setMark(${idx},this.value)"></td>
-                <td><span class="badge bg-dark"># ${rank}</span></td><td><small>${remark}</small></td>
-                <td><button class="btn btn-sm btn-primary" onclick="sendWa(${idx},'report',${rank},'${remark}')">Send</button></td></tr>`;
+                <td><span class="badge bg-dark"># ${rank}</span></td><td><small class="fw-bold text-primary">${remark}</small></td>
+                <td><button class="wa-btn btn-sm" onclick="sendWa(${idx},'report',${rank},'${remark}')">WhatsApp</button></td></tr>`;
         });
         document.getElementById('attBody').innerHTML = attH;
         document.getElementById('feeBody').innerHTML = feeH;
@@ -206,7 +199,7 @@
         window.open(`https://wa.me/${s.wa}?text=${msg}`);
     }
 
-    // SYSTEM FUNCTIONS
+    // CORE FUNCTIONS
     function toggleScanner() {
         const reader = document.getElementById('reader');
         if(reader.style.display === 'block') { html5QrCode.stop(); reader.style.display = 'none'; } 
