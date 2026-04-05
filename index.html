@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nenadiya | Executive Master Admin</title>
+    <title>NENADIYA | Executive Management System</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css">
     
@@ -16,64 +16,184 @@
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <style>
-        :root { --primary: #0f172a; --accent: #b45309; --bg: #f8fafc; --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
-        body { background-color: var(--bg); font-family: 'Inter', sans-serif; color: #1e293b; font-size: 13px; }
-        .main-header { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 1.5rem; border-bottom: 4px solid var(--accent); text-align: center; }
-        .nav-pills .nav-link { color: #64748b; font-weight: 600; border-radius: 8px; padding: 8px 15px; cursor: pointer; }
-        .nav-pills .nav-link.active { background-color: var(--primary) !important; box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2); }
-        .glass-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: var(--card-shadow); padding: 15px; margin-bottom: 20px; }
-        .id-card { width: 350px; height: 500px; background: white; border-radius: 24px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.3); margin: auto; }
-        .id-top { height: 160px; background: var(--primary); color: white; padding-top: 25px; clip-path: ellipse(120% 100% at 50% 0%); }
-        .id-photo-wrap { width: 130px; height: 130px; border-radius: 50%; border: 5px solid white; margin: -65px auto 0; overflow: hidden; background: #cbd5e1; position: relative; z-index: 5; }
-        .btn-wa { background-color: #22c55e; color: white; border: none; font-weight: 600; padding: 4px 10px; border-radius: 4px; font-size: 11px; }
-        .btn-delete { color: #e11d48; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
-        .btn-delete:hover { color: #991b1b; transform: scale(1.1); }
-        .table thead { background: #f1f5f9; position: sticky; top: 0; }
+        :root { 
+            --primary: #0f172a; /* Deep Navy */
+            --accent: #b45309;  /* Golden Bronze */
+            --bg: #f8fafc; 
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body { 
+            background-color: var(--bg); 
+            font-family: 'Inter', sans-serif; 
+            color: #1e293b;
+            font-size: 13px;
+        }
+
+        /* Executive Header */
+        .main-header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: white;
+            padding: 2.5rem 1rem;
+            border-bottom: 5px solid var(--accent);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .main-header h1 {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 0.2rem;
+            text-transform: uppercase;
+        }
+        .main-header p {
+            font-size: 1rem;
+            font-weight: 300;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin: 0;
+        }
+
+        /* Navigation */
+        .nav-pills .nav-link {
+            color: #64748b;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 10px 15px;
+            transition: 0.3s;
+        }
+        .nav-pills .nav-link.active {
+            background-color: var(--primary) !important;
+            color: white !important;
+            box-shadow: 0 4px 6px rgba(15, 23, 42, 0.2);
+        }
+
+        /* UI Cards */
+        .glass-card {
+            background: white;
+            border-radius: 16px;
+            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .table thead {
+            background-color: #f1f5f9;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.05em;
+        }
+
+        /* ID Card Styling */
+        .id-card { 
+            width: 350px; height: 500px; 
+            background: white; border-radius: 24px; 
+            overflow: hidden; position: relative; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            margin: auto;
+        }
+        .id-top { 
+            height: 170px; background: var(--primary); 
+            color: white; padding-top: 30px;
+            clip-path: ellipse(120% 100% at 50% 0%);
+        }
+        .id-photo-wrap { 
+            width: 140px; height: 140px; border-radius: 50%; 
+            border: 6px solid white; margin: -70px auto 0; 
+            overflow: hidden; position: relative; z-index: 5;
+            background: #cbd5e1;
+        }
+
+        /* Buttons */
+        .btn-wa {
+            background-color: #22c55e;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+        }
+        .btn-wa:hover { background-color: #16a34a; color: white; }
+        
+        .btn-delete {
+            color: #e11d48;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: 0.2s;
+        }
+        .btn-delete:hover { transform: scale(1.2); color: #991b1b; }
+        
+        #reader { width: 100%; max-width: 400px; margin: 10px auto; display: none; border-radius: 12px; overflow: hidden; }
     </style>
 </head>
 <body>
 
 <header class="main-header">
-    <h2 class="fw-bold m-0">නැණදිය (NENADIYA)</h2>
-    <div id="dbStatus" class="badge bg-warning text-dark mt-2">Connecting...</div>
+    <h1>NENADIYA</h1>
+    <p>Higher Educational Institute</p>
+    <div id="dbStatus" class="badge bg-warning text-dark mt-3">Connecting to Cloud...</div>
 </header>
 
-<div class="container-fluid py-3">
+<div class="container-fluid py-4 px-lg-5">
+    
     <div class="glass-card sticky-top" style="top: 10px; z-index: 1000;">
-        <div class="row g-2 align-items-end">
-            <div class="col-md-2 col-6"><label class="small fw-bold text-muted">Grade</label><select id="activeGrade" class="form-select" onchange="renderAll()"></select></div>
-            <div class="col-md-2 col-6"><label class="small fw-bold text-muted">Month</label><select id="activeMonth" class="form-select" onchange="renderAll()"></select></div>
-            <div class="col-md-6 col-8"><label class="small fw-bold text-muted">Global Search</label><input type="text" id="stuSearch" class="form-control" placeholder="Search by name..." onkeyup="renderAll()"></div>
-            <div class="col-md-2 col-4"><button class="btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#regModal">REGISTER</button></div>
+        <div class="row g-3 align-items-end">
+            <div class="col-md-2 col-6">
+                <label class="small fw-bold text-muted mb-1">Select Grade</label>
+                <select id="activeGrade" class="form-select" onchange="renderAll()"></select>
+            </div>
+            <div class="col-md-2 col-6">
+                <label class="small fw-bold text-muted mb-1">Target Month</label>
+                <select id="activeMonth" class="form-select" onchange="renderAll()"></select>
+            </div>
+            <div class="col-md-6 col-8">
+                <label class="small fw-bold text-muted mb-1">Global Database Search</label>
+                <input type="text" id="stuSearch" class="form-control" placeholder="Search by student name..." onkeyup="renderAll()">
+            </div>
+            <div class="col-md-2 col-4">
+                <button class="btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#regModal">REGISTER</button>
+            </div>
         </div>
     </div>
 
-    <ul class="nav nav-pills nav-justified mb-3">
-        <li class="nav-item"><a class="nav-link active" onclick="showTab('att')">ATTENDANCE</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('fees')">FINANCE</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('marks')">ACADEMICS</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('master')">MASTER SHEET</a></li>
+    <ul class="nav nav-pills nav-justified mb-4" id="pills-tab">
+        <li class="nav-item"><a class="nav-link active" onclick="showTab('att')"><i class="bi bi-person-check me-2"></i>ATTENDANCE</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showTab('fees')"><i class="bi bi-credit-card me-2"></i>FINANCE</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showTab('marks')"><i class="bi bi-bar-chart me-2"></i>ACADEMICS</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showTab('master')"><i class="bi bi-grid-3x3-gap-fill me-2"></i>MASTER SHEET</a></li>
     </ul>
 
     <div id="attSec" class="glass-card section-pane">
-        <div class="d-flex justify-content-between mb-3"><input type="date" id="attDate" class="form-control w-25" onchange="renderAll()"><button class="btn btn-dark btn-sm px-3" onclick="toggleScanner()">SCAN ID</button></div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <input type="date" id="attDate" class="form-control w-25" onchange="renderAll()">
+            <button class="btn btn-dark fw-bold px-4" onclick="toggleScanner()"><i class="bi bi-qr-code-scan me-2"></i>SCAN ID CARD</button>
+        </div>
         <div id="reader"></div>
-        <table class="table table-sm align-middle"><tbody id="attBody"></tbody></table>
+        <div class="table-responsive"><table class="table align-middle"><tbody id="attBody"></tbody></table></div>
     </div>
 
     <div id="feesSec" class="glass-card section-pane d-none">
-        <table class="table table-sm align-middle"><thead><tr><th>Name</th><th>Paid Months</th><th>Status</th><th>Action</th></tr></thead><tbody id="feeBody"></tbody></table>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead><tr><th>Student Name</th><th>Payment History</th><th>Current Status</th><th>Official Alert</th></tr></thead>
+            <tbody id="feeBody"></tbody>
+        </table></div>
     </div>
 
     <div id="marksSec" class="glass-card section-pane d-none">
-        <table class="table table-sm align-middle"><thead><tr><th>Name</th><th>Mark</th><th>Rank</th><th>Progress</th><th>Action</th></tr></thead><tbody id="marksBody"></tbody></table>
+        <div class="table-responsive"><table class="table align-middle">
+            <thead><tr><th>Student Name</th><th>Marks (100)</th><th>Class Rank</th><th>Progress</th><th>Report Card</th></tr></thead>
+            <tbody id="marksBody"></tbody>
+        </table></div>
     </div>
 
     <div id="masterSec" class="glass-card section-pane d-none">
-        <div class="table-responsive" style="max-height: 70vh;">
-            <table class="table table-bordered table-sm align-middle">
+        <div class="table-responsive" style="max-height: 600px;">
+            <table class="table table-bordered align-middle">
                 <thead class="table-dark">
-                    <tr><th>Grade</th><th>Student Name</th><th>Current Marks</th><th>Fees History</th><th>Manage</th></tr>
+                    <tr><th>Grade</th><th>Student Name</th><th>Last Marks</th><th>Payment History</th><th class="text-center">Manage</th></tr>
                 </thead>
                 <tbody id="masterBody"></tbody>
             </table>
@@ -81,34 +201,80 @@
     </div>
 </div>
 
-<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4 border-0 shadow"><h5 class="fw-bold mb-3">New Registration</h5><input type="text" id="regName" class="form-control mb-2" placeholder="Full Name"><input type="text" id="regWa" class="form-control mb-2" placeholder="947..."><select id="regGrade" class="form-select mb-3"></select><input type="file" id="regPhoto" class="form-control mb-4" accept="image/*"><button class="btn btn-primary w-100 py-2 fw-bold" onclick="saveStudent()">SAVE</button></div></div></div>
+<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content shadow-lg border-0 p-4 rounded-4">
+    <h4 class="fw-bold mb-3">Student Registration</h4>
+    <input type="text" id="regName" class="form-control mb-3 p-2" placeholder="Full Student Name">
+    <input type="text" id="regWa" class="form-control mb-3 p-2" placeholder="WhatsApp Number (947...)">
+    <select id="regGrade" class="form-select mb-3 p-2"></select>
+    <label class="small text-muted mb-1">Profile Photo</label>
+    <input type="file" id="regPhoto" class="form-control mb-4" accept="image/*">
+    <button class="btn btn-primary w-100 py-2 fw-bold" onclick="saveStudent()">SAVE TO DATABASE</button>
+</div></div></div>
 
-<div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center"><div id="idCardToExport" class="id-card"><div class="id-top"><h5>NENADIYA</h5><p class="small">Higher Educational Institute</p></div><div class="id-photo-wrap"><img id="idImg" src="" style="width:100%; height:100%; object-fit:cover;"></div><div class="p-3"><h4 id="idName" class="fw-bold"></h4><p id="idGradeDisp" class="badge bg-secondary"></p><div class="row text-start px-3 small"><div>ID: <b id="idVal"></b></div></div><div id="idQr" class="d-flex justify-content-center mt-3"></div></div></div><button class="btn btn-light mt-3 fw-bold shadow" onclick="downloadID()">DOWNLOAD ID</button></div></div></div>
+<div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center">
+    <div id="idCardToExport" class="id-card">
+        <div class="id-top"><h3>NENADIYA</h3><p class="small">Higher Educational Institute</p></div>
+        <div class="id-photo-wrap"><img id="idImg" src="" style="width:100%; height:100%; object-fit:cover;"></div>
+        <div class="p-3">
+            <h4 id="idName" class="fw-bold mt-2"></h4>
+            <p id="idGradeDisp" class="badge bg-secondary mb-3"></p>
+            <div class="row text-start px-4 mb-2"><div class="col-6 small">Reg ID: <b id="idVal"></b></div><div class="col-6 text-end small">Year: <b>2026</b></div></div>
+            <div id="idQr" class="d-flex justify-content-center mt-3"></div>
+        </div>
+    </div>
+    <div class="mt-4"><button class="btn btn-light fw-bold px-4" onclick="downloadID()">DOWNLOAD ID IMAGE</button></div>
+</div></div></div>
 
 <script>
-    const config = { apiKey: "AIzaSyCWLthmljW8jW4Y97SJgnfw0GLBIBQjF3M", authDomain: "nenadiya-database.firebaseapp.com", databaseURL: "https://nenadiya-database-default-rtdb.firebaseio.com/", projectId: "nenadiya-database", storageBucket: "nenadiya-database.firebasestorage.app", messagingSenderId: "223459963945", appId: "1:223459963945:web:5b2781f3ed85fe9f25838" };
+    // Database Configuration
+    const config = {
+        apiKey: "AIzaSyCWLthmljW8jW4Y97SJgnfw0GLBIBQjF3M",
+        authDomain: "nenadiya-database.firebaseapp.com",
+        databaseURL: "https://nenadiya-database-default-rtdb.firebaseio.com/",
+        projectId: "nenadiya-database",
+        storageBucket: "nenadiya-database.firebasestorage.app",
+        messagingSenderId: "223459963945",
+        appId: "1:223459963945:web:5b2781f3ed85fe9f25838"
+    };
     firebase.initializeApp(config);
     const db = firebase.database();
+    
     let students = [];
     const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     let html5QrCode;
 
     window.onload = () => {
+        // Populate Grade Dropdowns
         const gSel = document.getElementById('activeGrade'), regGSel = document.getElementById('regGrade');
-        for(let i=1; i<=13; i++) ['N','S','A'].forEach(s => { let o = new Option(`Grade ${i}${s}`, `Grade ${i}${s}`); gSel.add(o); regGSel.add(o.cloneNode(true)); });
-        for(let i=1; i<=10; i++) { let o = new Option(`Individual ${i}`, `Individual ${i}`); gSel.add(o); regGSel.add(o.cloneNode(true)); }
+        for(let i=1; i<=13; i++) ['N','S','A'].forEach(s => {
+            let o = new Option(`Grade ${i}${s}`, `Grade ${i}${s}`);
+            gSel.add(o); regGSel.add(o.cloneNode(true));
+        });
+        for(let i=1; i<=10; i++) {
+            let o = new Option(`Individual ${i}`, `Individual ${i}`);
+            gSel.add(o); regGSel.add(o.cloneNode(true));
+        }
+        
+        // Initial Settings
         document.getElementById('activeMonth').value = new Date().getMonth();
         months.forEach((m, i) => document.getElementById('activeMonth').add(new Option(m, i)));
         document.getElementById('attDate').valueAsDate = new Date();
-        db.ref('nenadiya_v4').on('value', (snap) => { 
-            students = snap.val() || []; renderAll(); 
+
+        // Real-time Listener
+        db.ref('nenadiya_v4').on('value', (snap) => {
+            students = snap.val() || [];
+            renderAll();
             document.getElementById('dbStatus').innerText = "Live Cloud Active";
-            document.getElementById('dbStatus').className = "badge bg-success mt-2";
+            document.getElementById('dbStatus').className = "badge bg-success mt-3";
         });
     };
 
     function renderAll() {
-        const m = parseInt(document.getElementById('activeMonth').value), g = document.getElementById('activeGrade').value, q = document.getElementById('stuSearch').value.toLowerCase(), d = document.getElementById('attDate').value;
+        const m = parseInt(document.getElementById('activeMonth').value);
+        const g = document.getElementById('activeGrade').value;
+        const q = document.getElementById('stuSearch').value.toLowerCase();
+        const d = document.getElementById('attDate').value;
+        
         const filtered = students.filter(s => s.grade === g && s.name.toLowerCase().includes(q));
         const sorted = [...filtered].sort((a,b) => (b.marks?.[m]||0) - (a.marks?.[m]||0));
 
@@ -116,25 +282,31 @@
 
         filtered.forEach(s => {
             const idx = students.indexOf(s);
-            let attHist = ""; if(s.att && s.att[m]) s.att[m].sort().forEach(dt => attHist += `<span class="badge bg-secondary opacity-75 me-1" style="font-size:9px" onclick="removeAtt(${idx},'${dt}')">P:${dt.split('-')[2]}</span>`);
-            let isP = s.att?.[m]?.includes(d);
-            attH += `<tr><td><b>${s.name}</b></td><td>${attHist}</td><td class="text-end"><button class="btn btn-sm ${isP?'btn-success':'btn-outline-primary'}" onclick="markAtt(${idx},'P')">P</button><button class="btn btn-sm btn-outline-danger ms-1" onclick="markAtt(${idx},'A')">A</button><button class="btn btn-sm btn-dark ms-2" onclick="showID(${idx})">ID</button></td></tr>`;
             
-            let feeHist = ""; months.forEach((name, i) => { if(s.fees?.[i]) feeHist += `<span class="badge bg-primary opacity-50 me-1" style="font-size:8px">${name.slice(0,3)}</span>`; });
+            // Attendance Logic
+            let attHist = "";
+            if(s.att && s.att[m]) s.att[m].sort().forEach(dt => attHist += `<span class="badge bg-secondary opacity-75 me-1" style="font-size:9px" onclick="removeAtt(${idx},'${dt}')">P:${dt.split('-')[2]}</span>`);
+            let isP = s.att?.[m]?.includes(d);
+            attH += `<tr><td><h6 class="mb-0 fw-bold">${s.name}</h6></td><td>${attHist}</td><td class="text-end"><button class="btn btn-sm ${isP?'btn-success':'btn-outline-primary'}" onclick="markAtt(${idx},'P')">P</button><button class="btn btn-sm btn-outline-danger ms-1" onclick="markAtt(${idx},'A')">A</button><button class="btn btn-sm btn-dark ms-2" onclick="showID(${idx})">VIEW ID</button></td></tr>`;
+            
+            // Fee Logic
+            let fHist = ""; months.forEach((name, i) => { if(s.fees?.[i]) fHist += `<span class="badge bg-primary opacity-50 me-1" style="font-size:8px">${name.slice(0,3)}</span>`; });
             let paid = s.fees?.[m];
-            feeH += `<tr><td><b>${s.name}</b></td><td>${feeHist}</td><td><button class="btn btn-sm ${paid?'btn-success':'btn-danger'}" onclick="toggleFee(${idx},${!paid})">${paid?'PAID':'DUE'}</button></td><td><button class="btn-wa" onclick="sendWa(${idx},'fee')">WHATSAPP</button></td></tr>`;
+            feeH += `<tr><td><h6 class="mb-0 fw-bold">${s.name}</h6></td><td>${fHist}</td><td><button class="btn btn-sm ${paid?'btn-success':'btn-danger'}" onclick="toggleFee(${idx},${!paid})">${paid?'SUCCESS':'UNPAID'}</button></td><td><button class="btn-wa" onclick="sendWa(${idx},'fee')">WHATSAPP ALERT</button></td></tr>`;
 
+            // Academic Logic
             const rank = sorted.findIndex(x => x.id === s.id) + 1;
             const score = s.marks?.[m] || 0;
-            const rem = score >= 75 ? 'Excellent' : score >= 50 ? 'Good' : 'Needs Focus';
-            marksH += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control form-control-sm w-50 border-0 bg-light" value="${score}" onchange="setMark(${idx},this.value)"></td><td><span class="badge bg-dark">#${rank}</span></td><td><small class="fw-bold text-primary">${rem}</small></td><td><button class="btn-wa" onclick="sendWa(${idx},'report',${rank},'${rem}')">SEND REPORT</button></td></tr>`;
+            const rem = score >= 75 ? "Excellent" : score >= 50 ? "Good" : "Needs Focus";
+            marksH += `<tr><td><h6 class="mb-0 fw-bold">${s.name}</h6></td><td><input type="number" class="form-control form-control-sm w-50 border-0 bg-light" value="${score}" onchange="setMark(${idx},this.value)"></td><td><span class="badge bg-dark">RANK ${rank}</span></td><td><small class="fw-bold text-primary">${rem}</small></td><td><button class="btn-wa" onclick="sendWa(${idx},'report',${rank},'${rem}')">SEND REPORT</button></td></tr>`;
         });
 
+        // Master Sheet (All Students)
         const globalSearch = students.filter(s => s.name.toLowerCase().includes(q));
         globalSearch.forEach(s => {
             const idx = students.indexOf(s);
             let fHist = ""; months.forEach((name, i) => { if(s.fees?.[i]) fHist += `<span class="badge bg-success me-1" style="font-size:9px">${name.slice(0,3)}</span>`; });
-            masterH += `<tr><td><span class="badge bg-secondary">${s.grade}</span></td><td><b>${s.name}</b></td><td>${s.marks?.[m] || 0}</td><td>${fHist}</td><td class="text-center"><i class="bi bi-trash3-fill btn-delete" onclick="deleteStudent(${idx}, '${s.name}')"></i></td></tr>`;
+            masterH += `<tr><td><span class="badge bg-secondary">${s.grade}</span></td><td><b>${s.name}</b></td><td>${s.marks?.[m] || 0}</td><td>${fHist || '---'}</td><td class="text-center"><i class="bi bi-trash3-fill btn-delete" onclick="deleteStudent(${idx}, '${s.name}')"></i></td></tr>`;
         });
 
         document.getElementById('attBody').innerHTML = attH;
@@ -143,6 +315,7 @@
         document.getElementById('masterBody').innerHTML = masterH;
     }
 
+    // Professional Bilingual Messaging
     function sendWa(i, type, rank, rem) {
         const s = students[i], m = months[document.getElementById('activeMonth').value], p = s.fees?.[document.getElementById('activeMonth').value];
         let msg = "";
@@ -161,17 +334,22 @@
         window.open(`https://wa.me/${s.wa}?text=${msg}`);
     }
 
-    function deleteStudent(index, name) { if(confirm(`⚠️ DELETE: Remove ${name} permanently?`)) { students.splice(index, 1); db.ref('nenadiya_v4').set(students); } }
-    function toggleScanner() { const r = document.getElementById('reader'); if(r.style.display==='block'){html5QrCode.stop(); r.style.display='none';} else {r.style.display='block'; html5QrCode=new Html5Qrcode("reader"); html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:250},(t)=>{const i=students.findIndex(s=>s.id===t); if(i!==-1){markAtt(i,'P'); alert("Scanned: "+students[i].name);}});}}
+    // Core Actions
+    function deleteStudent(index, name) { if(confirm(`⚠️ PERMANENT DELETE: Remove ${name}?`)) { students.splice(index, 1); db.ref('nenadiya_v4').set(students); } }
     function markAtt(i,t){const m=document.getElementById('activeMonth').value,d=document.getElementById('attDate').value; if(!students[i].att)students[i].att={}; if(!students[i].att[m])students[i].att[m]=[]; if(t==='P'&&!students[i].att[m].includes(d))students[i].att[m].push(d); if(t==='A')students[i].att[m]=students[i].att[m].filter(x=>x!==d); db.ref('nenadiya_v4').set(students);}
-    function removeAtt(i,d){if(confirm("Remove Attendance?")){const m=document.getElementById('activeMonth').value; students[i].att[m]=students[i].att[m].filter(x=>x!==d); db.ref('nenadiya_v4').set(students);}}
+    function removeAtt(i,d){if(confirm("Remove this entry?")){const m=document.getElementById('activeMonth').value; students[i].att[m]=students[i].att[m].filter(x=>x!==d); db.ref('nenadiya_v4').set(students);}}
     function toggleFee(i,v){if(!students[i].fees)students[i].fees={}; students[i].fees[document.getElementById('activeMonth').value]=v; db.ref('nenadiya_v4').set(students);}
     function setMark(i,v){if(!students[i].marks)students[i].marks={}; students[i].marks[document.getElementById('activeMonth').value]=parseInt(v); db.ref('nenadiya_v4').set(students);}
+    
+    // UI Helpers
     function showTab(id){document.querySelectorAll('.section-pane').forEach(s=>s.classList.add('d-none')); document.getElementById(id+'Sec').classList.remove('d-none'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); event.target.closest('.nav-link').classList.add('active');}
+    function toggleScanner() { const r = document.getElementById('reader'); if(r.style.display==='block'){html5QrCode.stop(); r.style.display='none';} else {r.style.display='block'; html5QrCode=new Html5Qrcode("reader"); html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:250},(t)=>{const i=students.findIndex(s=>s.id===t); if(i!==-1){markAtt(i,'P'); alert("Attendance Marked: "+students[i].name);}});}}
     function showID(i){const s=students[i]; document.getElementById('idName').innerText=s.name; document.getElementById('idGradeDisp').innerText=s.grade; document.getElementById('idVal').innerText=s.id; document.getElementById('idImg').src=s.photo; document.getElementById('idQr').innerHTML=""; new QRCode(document.getElementById('idQr'),{text:s.id,width:80,height:80}); new bootstrap.Modal(document.getElementById('idModal')).show();}
-    function downloadID(){html2canvas(document.getElementById('idCardToExport')).then(c=>{let l=document.createElement('a'); l.download="ID.png"; l.href=c.toDataURL(); l.click();});}
+    function downloadID(){html2canvas(document.getElementById('idCardToExport')).then(c=>{let l=document.createElement('a'); l.download="NENADIYA_ID.png"; l.href=c.toDataURL(); l.click();});}
+    
     async function saveStudent(){const f=document.getElementById('regPhoto').files[0]; let ph="https://via.placeholder.com/150"; if(f)ph=await new Promise(r=>{const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(f);}); students.push({id:"NEN"+Date.now().toString().slice(-5), name:document.getElementById('regName').value, wa:document.getElementById('regWa').value, grade:document.getElementById('regGrade').value, photo:ph, att:{}, fees:{}, marks:{}}); db.ref('nenadiya_v4').set(students); bootstrap.Modal.getInstance(document.getElementById('regModal')).hide();}
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
