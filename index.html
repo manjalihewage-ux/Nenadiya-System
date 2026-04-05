@@ -26,15 +26,16 @@
         .id-top { height: 160px; background: var(--primary); color: white; padding-top: 25px; clip-path: ellipse(120% 100% at 50% 0%); }
         .id-photo-wrap { width: 130px; height: 130px; border-radius: 50%; border: 5px solid white; margin: -65px auto 0; overflow: hidden; background: #cbd5e1; position: relative; z-index: 5; }
         .btn-wa { background-color: #22c55e; color: white; border: none; font-weight: 600; padding: 4px 8px; border-radius: 4px; }
+        .btn-delete { color: #e11d48; cursor: pointer; transition: 0.2s; font-size: 1.1rem; }
+        .btn-delete:hover { color: #991b1b; transform: scale(1.1); }
         .table thead { background: #f1f5f9; position: sticky; top: 0; }
-        .master-row:hover { background-color: #f8fafc; }
     </style>
 </head>
 <body>
 
 <header class="main-header">
     <h2 class="fw-bold m-0">නැණදිය (NENADIYA)</h2>
-    <div id="dbStatus" class="badge bg-success mt-2">Connecting...</div>
+    <div id="dbStatus" class="badge bg-warning text-dark mt-2">Connecting...</div>
 </header>
 
 <div class="container-fluid py-3">
@@ -42,7 +43,7 @@
         <div class="row g-2 align-items-end">
             <div class="col-md-2 col-6"><label class="small fw-bold text-muted">Grade</label><select id="activeGrade" class="form-select" onchange="renderAll()"></select></div>
             <div class="col-md-2 col-6"><label class="small fw-bold text-muted">Month</label><select id="activeMonth" class="form-select" onchange="renderAll()"></select></div>
-            <div class="col-md-6 col-8"><label class="small fw-bold text-muted">Global Search</label><input type="text" id="stuSearch" class="form-control" placeholder="Search any student..." onkeyup="renderAll()"></div>
+            <div class="col-md-6 col-8"><label class="small fw-bold text-muted">Global Search</label><input type="text" id="stuSearch" class="form-control" placeholder="Search across all grades..." onkeyup="renderAll()"></div>
             <div class="col-md-2 col-4"><button class="btn btn-primary w-100 fw-bold" data-bs-toggle="modal" data-bs-target="#regModal">REGISTER</button></div>
         </div>
     </div>
@@ -51,17 +52,17 @@
         <li class="nav-item"><a class="nav-link active" onclick="showTab('att')">ATTENDANCE</a></li>
         <li class="nav-item"><a class="nav-link" onclick="showTab('fees')">FINANCE</a></li>
         <li class="nav-item"><a class="nav-link" onclick="showTab('marks')">ACADEMICS</a></li>
-        <li class="nav-item"><a class="nav-link" onclick="showTab('master')"><i class="bi bi-grid-3x3-gap-fill me-1"></i>MASTER SHEET</a></li>
+        <li class="nav-item"><a class="nav-link" onclick="showTab('master')">MASTER SHEET</a></li>
     </ul>
 
     <div id="attSec" class="glass-card section-pane">
-        <div class="d-flex justify-content-between mb-3"><input type="date" id="attDate" class="form-control w-25" onchange="renderAll()"><button class="btn btn-dark btn-sm" onclick="toggleScanner()">SCAN ID</button></div>
+        <div class="d-flex justify-content-between mb-3"><input type="date" id="attDate" class="form-control w-25" onchange="renderAll()"><button class="btn btn-dark btn-sm px-3" onclick="toggleScanner()">SCAN ID</button></div>
         <div id="reader"></div>
         <table class="table table-sm align-middle"><tbody id="attBody"></tbody></table>
     </div>
 
     <div id="feesSec" class="glass-card section-pane d-none">
-        <table class="table table-sm align-middle"><thead><tr><th>Name</th><th>History</th><th>Status</th><th>WhatsApp</th></tr></thead><tbody id="feeBody"></tbody></table>
+        <table class="table table-sm align-middle"><thead><tr><th>Name</th><th>Paid Months</th><th>Status</th><th>WhatsApp</th></tr></thead><tbody id="feeBody"></tbody></table>
     </div>
 
     <div id="marksSec" class="glass-card section-pane d-none">
@@ -72,7 +73,7 @@
         <div class="table-responsive" style="max-height: 70vh;">
             <table class="table table-bordered table-sm align-middle">
                 <thead class="table-dark">
-                    <tr><th>Grade</th><th>Student Name</th><th>Current Marks</th><th>Fees History (Paid Months)</th></tr>
+                    <tr><th>Grade</th><th>Student Name</th><th>Current Marks</th><th>Fees History</th><th>Manage</th></tr>
                 </thead>
                 <tbody id="masterBody"></tbody>
             </table>
@@ -80,9 +81,9 @@
     </div>
 </div>
 
-<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4"><h5 class="fw-bold mb-3">New Registration</h5><input type="text" id="regName" class="form-control mb-2" placeholder="Full Name"><input type="text" id="regWa" class="form-control mb-2" placeholder="947..."><select id="regGrade" class="form-select mb-3"></select><input type="file" id="regPhoto" class="form-control mb-4" accept="image/*"><button class="btn btn-primary w-100 py-2" onclick="saveStudent()">SAVE</button></div></div></div>
+<div class="modal fade" id="regModal" tabindex="-1"><div class="modal-dialog"><div class="modal-content p-4 border-0 shadow"><h5 class="fw-bold mb-3">Register New Student</h5><input type="text" id="regName" class="form-control mb-2" placeholder="Full Name"><input type="text" id="regWa" class="form-control mb-2" placeholder="WhatsApp (947...)"><select id="regGrade" class="form-select mb-3"></select><label class="small text-muted">Upload Photo</label><input type="file" id="regPhoto" class="form-control mb-4" accept="image/*"><button class="btn btn-primary w-100 py-2 fw-bold" onclick="saveStudent()">SAVE STUDENT</button></div></div></div>
 
-<div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center"><div id="idCardToExport" class="id-card"><div class="id-top"><h5>NENADIYA</h5><p class="small">Higher Educational Institute</p></div><div class="id-photo-wrap"><img id="idImg" src="" style="width:100%; height:100%; object-fit:cover;"></div><div class="p-3"><h4 id="idName" class="fw-bold"></h4><p id="idGradeDisp" class="badge bg-secondary"></p><div class="row text-start px-3 small"><div>ID: <b id="idVal"></b></div></div><div id="idQr" class="d-flex justify-content-center mt-3"></div></div></div><button class="btn btn-light mt-3 fw-bold" onclick="downloadID()">DOWNLOAD ID</button></div></div></div>
+<div class="modal fade" id="idModal" tabindex="-1"><div class="modal-dialog modal-dialog-centered"><div class="modal-content bg-transparent border-0 text-center"><div id="idCardToExport" class="id-card"><div class="id-top"><h5>NENADIYA</h5><p class="small">Higher Educational Institute</p></div><div class="id-photo-wrap"><img id="idImg" src="" style="width:100%; height:100%; object-fit:cover;"></div><div class="p-3"><h4 id="idName" class="fw-bold"></h4><p id="idGradeDisp" class="badge bg-secondary"></p><div class="row text-start px-3 small"><div>ID: <b id="idVal"></b></div></div><div id="idQr" class="d-flex justify-content-center mt-3"></div></div></div><button class="btn btn-light mt-3 fw-bold shadow" onclick="downloadID()">DOWNLOAD ID</button></div></div></div>
 
 <script>
     const config = { apiKey: "AIzaSyCWLthmljW8jW4Y97SJgnfw0GLBIBQjF3M", authDomain: "nenadiya-database.firebaseapp.com", databaseURL: "https://nenadiya-database-default-rtdb.firebaseio.com/", projectId: "nenadiya-database", storageBucket: "nenadiya-database.firebasestorage.app", messagingSenderId: "223459963945", appId: "1:223459963945:web:5b2781f3ed85fe9f25838" };
@@ -99,7 +100,12 @@
         document.getElementById('activeMonth').value = new Date().getMonth();
         months.forEach((m, i) => document.getElementById('activeMonth').add(new Option(m, i)));
         document.getElementById('attDate').valueAsDate = new Date();
-        db.ref('nenadiya_v4').on('value', (snap) => { students = snap.val() || []; renderAll(); });
+        db.ref('nenadiya_v4').on('value', (snap) => { 
+            students = snap.val() || []; 
+            renderAll(); 
+            document.getElementById('dbStatus').innerText = "Live Cloud Active";
+            document.getElementById('dbStatus').className = "badge bg-success mt-2";
+        });
     };
 
     function renderAll() {
@@ -109,7 +115,6 @@
 
         let attH="", feeH="", marksH="", masterH="";
 
-        // 1. Regular Tab Rendering
         filtered.forEach(s => {
             const idx = students.indexOf(s);
             let attHist = ""; if(s.att && s.att[m]) s.att[m].sort().forEach(dt => attHist += `<span class="badge bg-secondary opacity-75 me-1" style="font-size:9px" onclick="removeAtt(${idx},'${dt}')">P:${dt.split('-')[2]}</span>`);
@@ -122,19 +127,16 @@
 
             const rank = sorted.findIndex(x => x.id === s.id) + 1;
             const score = s.marks?.[m] || 0;
-            marksH += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control form-control-sm w-50" value="${score}" onchange="setMark(${idx},this.value)"></td><td><span class="badge bg-dark">#${rank}</span></td><td><small class="fw-bold text-primary">${score>=75?'Excellent':score>=50?'Good':'Try Hard'}</small></td><td><button class="btn-wa" onclick="sendWa(${idx},'report',${rank},'${score>=75?'Excellent':'Good'}')">Send</button></td></tr>`;
+            marksH += `<tr><td><b>${s.name}</b></td><td><input type="number" class="form-control form-control-sm w-50 border-0 bg-light" value="${score}" onchange="setMark(${idx},this.value)"></td><td><span class="badge bg-dark">#${rank}</span></td><td><small class="fw-bold text-primary">${score>=75?'Excellent':score>=50?'Good':'Try Hard'}</small></td><td><button class="btn-wa" onclick="sendWa(${idx},'report',${rank},'${score>=75?'Excellent':'Good'}')">Send</button></td></tr>`;
         });
 
-        // 2. MASTER SHEET Tab Rendering (All Students)
+        // Master Sheet with Delete Option
         const globalSearch = students.filter(s => s.name.toLowerCase().includes(q));
         globalSearch.forEach(s => {
+            const idx = students.indexOf(s);
             let fHist = ""; months.forEach((name, i) => { if(s.fees?.[i]) fHist += `<span class="badge bg-success me-1" style="font-size:9px">${name.slice(0,3)}</span>`; });
-            masterH += `<tr class="master-row">
-                <td><span class="badge bg-secondary">${s.grade}</span></td>
-                <td><b>${s.name}</b></td>
-                <td><span class="fw-bold">${s.marks?.[m] || 0}</span></td>
-                <td>${fHist || '<small class="text-muted">No Payment History</small>'}</td>
-            </tr>`;
+            masterH += `<tr><td><span class="badge bg-secondary">${s.grade}</span></td><td><b>${s.name}</b></td><td>${s.marks?.[m] || 0}</td><td>${fHist}</td>
+                <td class="text-center"><i class="bi bi-trash3-fill btn-delete" onclick="deleteStudent(${idx}, '${s.name}')"></i></td></tr>`;
         });
 
         document.getElementById('attBody').innerHTML = attH;
@@ -143,7 +145,16 @@
         document.getElementById('masterBody').innerHTML = masterH;
     }
 
-    // UTILITIES
+    // New Delete Function
+    function deleteStudent(index, name) {
+        if(confirm(`⚠️ PERMANENT DELETE: Are you sure you want to remove ${name} from the database? This cannot be undone.`)) {
+            students.splice(index, 1);
+            db.ref('nenadiya_v4').set(students);
+            alert("Student Record Deleted.");
+        }
+    }
+
+    // UTILS
     function toggleScanner() { const r = document.getElementById('reader'); if(r.style.display==='block'){html5QrCode.stop(); r.style.display='none';} else {r.style.display='block'; html5QrCode=new Html5Qrcode("reader"); html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:250},(t)=>{const i=students.findIndex(s=>s.id===t); if(i!==-1){markAtt(i,'P'); alert("Scanned: "+students[i].name);}});}}
     function markAtt(i,t){const m=document.getElementById('activeMonth').value,d=document.getElementById('attDate').value; if(!students[i].att)students[i].att={}; if(!students[i].att[m])students[i].att[m]=[]; if(t==='P'&&!students[i].att[m].includes(d))students[i].att[m].push(d); if(t==='A')students[i].att[m]=students[i].att[m].filter(x=>x!==d); db.ref('nenadiya_v4').set(students);}
     function removeAtt(i,d){if(confirm("Remove?")){const m=document.getElementById('activeMonth').value; students[i].att[m]=students[i].att[m].filter(x=>x!==d); db.ref('nenadiya_v4').set(students);}}
@@ -152,11 +163,7 @@
     function showTab(id){document.querySelectorAll('.section-pane').forEach(s=>s.classList.add('d-none')); document.getElementById(id+'Sec').classList.remove('d-none'); document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active')); event.target.closest('.nav-link').classList.add('active');}
     function showID(i){const s=students[i]; document.getElementById('idName').innerText=s.name; document.getElementById('idGradeDisp').innerText=s.grade; document.getElementById('idVal').innerText=s.id; document.getElementById('idImg').src=s.photo; document.getElementById('idQr').innerHTML=""; new QRCode(document.getElementById('idQr'),{text:s.id,width:80,height:80}); new bootstrap.Modal(document.getElementById('idModal')).show();}
     function downloadID(){html2canvas(document.getElementById('idCardToExport')).then(c=>{let l=document.createElement('a'); l.download="ID.png"; l.href=c.toDataURL(); l.click();});}
-    function sendWa(i,t,r,rem){
-        const s=students[i], m=months[document.getElementById('activeMonth').value], p=s.fees?.[document.getElementById('activeMonth').value];
-        let msg = t==='fee' ? (p?`*Payment Success ✅* %0AStudent: ${s.name}%0AMonth: ${m}`:`*Fee Due ❌* %0AStudent: ${s.name}%0AMonth: ${m}`) : `*Progress Report*%0AStudent: ${s.name}%0ARank: ${r}%0AMarks: ${s.marks?.[document.getElementById('activeMonth').value]||0}`;
-        window.open(`https://wa.me/${s.wa}?text=${msg}`);
-    }
+    function sendWa(i,t,r,rem){const s=students[i], m=months[document.getElementById('activeMonth').value], p=s.fees?.[document.getElementById('activeMonth').value]; let msg = t==='fee' ? (p?`*Payment Success ✅* %0AStudent: ${s.name}%0AMonth: ${m}`:`*Fee Due ❌* %0AStudent: ${s.name}%0AMonth: ${m}`) : `*Progress Report*%0AStudent: ${s.name}%0ARank: ${r}%0AMarks: ${s.marks?.[document.getElementById('activeMonth').value]||0}`; window.open(`https://wa.me/${s.wa}?text=${msg}`);}
     async function saveStudent(){const f=document.getElementById('regPhoto').files[0]; let ph="https://via.placeholder.com/150"; if(f)ph=await new Promise(r=>{const rd=new FileReader(); rd.onload=e=>r(e.target.result); rd.readAsDataURL(f);}); students.push({id:"NEN"+Date.now().toString().slice(-5), name:document.getElementById('regName').value, wa:document.getElementById('regWa').value, grade:document.getElementById('regGrade').value, photo:ph, att:{}, fees:{}, marks:{}}); db.ref('nenadiya_v4').set(students); bootstrap.Modal.getInstance(document.getElementById('regModal')).hide();}
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
